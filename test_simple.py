@@ -23,6 +23,8 @@ from layers import disp_to_depth
 from utils import download_model_if_doesnt_exist
 from evaluate_depth import STEREO_SCALE_FACTOR
 
+torch.backends.cudnn.enabled = False
+
 def parse_args():
     parser = argparse.ArgumentParser(
         description='Simple testing funtion for Monodepthv2 models.')
@@ -60,11 +62,11 @@ def test_simple(args):
     assert args.model_name is not None, \
         "You must specify the --model_name parameter; see README.md for an example"
 
-#    if torch.cuda.is_available() and not args.no_cuda:
-#        device = torch.device("cuda")
-#    else:
-#        device = torch.device("cpu")
-    device = torch.device("cpu")
+    if torch.cuda.is_available() and not args.no_cuda:
+        device = torch.device("cuda")
+    else:
+        device = torch.device("cpu")
+#    device = torch.device("cpu")
 
     if args.pred_metric_depth and "stereo" not in args.model_name:
         print("Warning: The --pred_metric_depth flag only makes sense for stereo-trained KITTI "
