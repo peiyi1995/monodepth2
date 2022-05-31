@@ -142,11 +142,11 @@ def test_simple(args):
             output_name = os.path.splitext(os.path.basename(image_path))[0]
             scaled_disp, depth = disp_to_depth(disp, 0.1, 100)
             if args.pred_metric_depth:
-                name_dest_npy = os.path.join(output_directory, "{}_depth.npy".format(output_name))
+                name_dest_npy = os.path.join(output_directory, "{}_depth_{}.npy".format(output_name, args.model_name))
                 metric_depth = STEREO_SCALE_FACTOR * depth.cpu().numpy()
                 np.save(name_dest_npy, metric_depth)
             else:
-                name_dest_npy = os.path.join(output_directory, "{}_disp.npy".format(output_name))
+                name_dest_npy = os.path.join(output_directory, "{}_disp_{}.npy".format(output_name, args.model_name))
                 np.save(name_dest_npy, scaled_disp.cpu().numpy())
 
             # Saving colormapped depth image
@@ -157,7 +157,7 @@ def test_simple(args):
             colormapped_im = (mapper.to_rgba(disp_resized_np)[:, :, :3] * 255).astype(np.uint8)
             im = pil.fromarray(colormapped_im)
 
-            name_dest_im = os.path.join(output_directory, "{}_disp.jpeg".format(output_name))
+            name_dest_im = os.path.join(output_directory, "{}_disp_{}.jpeg".format(output_name, args.model_name))
             im.save(name_dest_im)
 
             print("   Processed {:d} of {:d} images - saved predictions to:".format(
